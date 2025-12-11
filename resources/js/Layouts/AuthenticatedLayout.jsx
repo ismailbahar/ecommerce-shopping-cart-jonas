@@ -12,7 +12,7 @@ export default function AuthenticatedLayout({ header, children }) {
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100 flex flex-col">
             <nav className="border-b border-gray-100 bg-white">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
@@ -194,7 +194,67 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
             )}
 
-            <main>{children}</main>
+            <main className="flex-1">{children}</main>
+
+            {/* Footer */}
+            <footer className="bg-gray-800 text-white border-t border-gray-700 mt-auto">
+                <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Column 1 */}
+                        <div>
+                            <h3 className="text-lg font-semibold mb-3">E-Commerce Cart</h3>
+                            <p className="text-gray-400 text-sm">
+                                A modern shopping cart built with Laravel and React.
+                            </p>
+                        </div>
+
+                        {/* Column 2 */}
+                        <div>
+                            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
+                            <ul className="space-y-2">
+                                <li>
+                                    <Link href={route('products.index')} className="text-gray-400 hover:text-white text-sm">
+                                        Browse Products
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href={route('cart.index')} className="text-gray-400 hover:text-white text-sm">
+                                        View Cart
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href={route('orders.index')} className="text-gray-400 hover:text-white text-sm">
+                                        My Orders
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Column 3 */}
+                        <div>
+                            <h3 className="text-lg font-semibold mb-3">Connect</h3>
+                            <ul className="space-y-2">
+                                <li>
+                                    <a href="https://github.com/ismailbahar" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white text-sm">
+                                        GitHub
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mailto:i.bhr.1999@gmail.com" className="text-gray-400 hover:text-white text-sm">
+                                        Email
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="border-t border-gray-700 mt-8 pt-6 text-center">
+                        <p className="text-gray-400 text-sm">
+                            &copy; {new Date().getFullYear()} Ismail Bahar. Built for Jonas E-Commerce Task.
+                        </p>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }
