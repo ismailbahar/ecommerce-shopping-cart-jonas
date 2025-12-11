@@ -25,10 +25,22 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    href={route('products.index')}
+                                    active={route().current('products.*')}
                                 >
-                                    Dashboard
+                                    Products
+                                </NavLink>
+                                <NavLink
+                                    href={route('cart.index')}
+                                    active={route().current('cart.*')}
+                                >
+                                    Cart
+                                </NavLink>
+                                <NavLink
+                                    href={route('orders.index')}
+                                    active={route().current('orders.*')}
+                                >
+                                    My Orders
                                 </NavLink>
                             </div>
                         </div>
@@ -129,10 +141,22 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            href={route('products.index')}
+                            active={route().current('products.*')}
                         >
-                            Dashboard
+                            Products
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('cart.index')}
+                            active={route().current('cart.*')}
+                        >
+                            Cart
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('orders.index')}
+                            active={route().current('orders.*')}
+                        >
+                            My Orders
                         </ResponsiveNavLink>
                     </div>
 
