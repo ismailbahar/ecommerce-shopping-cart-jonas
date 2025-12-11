@@ -1,10 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Show({ auth, product }) {
     const [quantity, setQuantity] = useState(1);
     const [processing, setProcessing] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
 
     const addToCart = () => {
         setProcessing(true);
@@ -14,11 +15,21 @@ export default function Show({ auth, product }) {
         }, {
             preserveScroll: true,
             onSuccess: () => {
+                setShowPopup(true);
                 setQuantity(1);
             },
             onFinish: () => setProcessing(false)
         });
     };
+
+    useEffect(() => {
+        if (showPopup) {
+            const timer = setTimeout(() => {
+                setShowPopup(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [showPopup]);
 
     const incrementQuantity = () => {
         if (quantity < product.stock_quantity) {
@@ -38,6 +49,39 @@ export default function Show({ auth, product }) {
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Product Details</h2>}
         >
             <Head title={product.name}/>
+
+            {/* Success Popup */}
+            {showPopup && (
+                <div className="fixed top-8 right-8 z-50 animate-slide-in">
+                    <div className="backdrop-blur-xl bg-green-400/90 border border-green-300/50 rounded-2xl p-6 shadow-2xl min-w-[320px]">
+                        <div className="flex items-start gap-4">
+                            <div className="flex-shrink-0">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-white font-bold text-lg mb-1">Added to Cart!</h3>
+                                <p className="text-white/90 text-sm">
+                                    {quantity}x {product.name} added successfully
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setShowPopup(false)}
+                                className="flex-shrink-0 text-white/80 hover:text-white transition-colors"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        {/* Progress bar */}
+                        <div className="mt-3 h-1 bg-white/20 rounded-full overflow-hidden">
+                            <div className="h-full bg-white/60 rounded-full animate-progress" />
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="py-12 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 min-h-screen">
                 <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
