@@ -34,6 +34,18 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
+            // Sepet item sayısını tüm sayfalara gönder
+            'cartItemCount' => function () use ($request) {
+                if ($request->user()) {
+                    $cart = $request->user()->cart()->with('items')->first();
+                    return $cart ? $cart->items->sum('quantity') : 0;
+                }
+                return 0;
+            },
         ];
     }
 }

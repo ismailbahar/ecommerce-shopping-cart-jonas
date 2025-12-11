@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 export default function Index({ auth, cart, cartItems, total }) {
     const [processing, setProcessing] = useState(false);
@@ -18,32 +19,99 @@ export default function Index({ auth, cart, cartItems, total }) {
     };
 
     const removeItem = (cartItemId) => {
-        if (confirm('Are you sure you want to remove this item?')) {
-            setProcessing(true);
-            router.delete(route('cart.remove', cartItemId), {
-                preserveScroll: true,
-                onFinish: () => setProcessing(false)
-            });
-        }
+        Swal.fire({
+            title: 'Remove Item?',
+            text: "Are you sure you want to remove this item from your cart?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setProcessing(true);
+                router.delete(route('cart.remove', cartItemId), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        Swal.fire({
+                            title: 'Removed!',
+                            text: 'Item has been removed from your cart.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    },
+                    onFinish: () => setProcessing(false)
+                });
+            }
+        });
     };
 
     const clearCart = () => {
-        if (confirm('Are you sure you want to clear your cart?')) {
-            setProcessing(true);
-            router.delete(route('cart.clear'), {
-                preserveScroll: true,
-                onFinish: () => setProcessing(false)
-            });
-        }
+        Swal.fire({
+            title: 'Clear Cart?',
+            text: "This will remove all items from your cart. This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, clear it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setProcessing(true);
+                router.delete(route('cart.clear'), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        Swal.fire({
+                            title: 'Cleared!',
+                            text: 'Your cart has been cleared.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    },
+                    onFinish: () => setProcessing(false)
+                });
+            }
+        });
     };
 
     const placeOrder = () => {
-        if (confirm('Are you sure you want to place this order?')) {
-            setProcessing(true);
-            router.post(route('orders.store'), {}, {
-                onFinish: () => setProcessing(false)
-            });
-        }
+        Swal.fire({
+            title: 'Place Order?',
+            text: `Total amount: $${parseFloat(total).toFixed(2)}`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#10b981',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, place order!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setProcessing(true);
+                router.post(route('orders.store'), {}, {
+                    onSuccess: () => {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Your order has been placed successfully!',
+                            icon: 'success',
+                            confirmButtonColor: '#10b981'
+                        });
+                    },
+                    onError: () => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to place order. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    },
+                    onFinish: () => setProcessing(false)
+                });
+            }
+        });
     };
 
     return (

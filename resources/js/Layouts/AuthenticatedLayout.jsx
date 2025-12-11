@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
+    const cartItemCount = usePage().props.cartItemCount || 0;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -34,7 +35,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                     href={route('cart.index')}
                                     active={route().current('cart.*')}
                                 >
-                                    Cart
+                                    <div className="flex items-center gap-2">
+                                        Cart
+                                        {cartItemCount > 0 && (
+                                            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">
+                                                {cartItemCount}
+                                            </span>
+                                        )}
+                                    </div>
                                 </NavLink>
                                 <NavLink
                                     href={route('orders.index')}
@@ -150,7 +158,14 @@ export default function AuthenticatedLayout({ header, children }) {
                             href={route('cart.index')}
                             active={route().current('cart.*')}
                         >
-                            Cart
+                            <div className="flex items-center justify-between">
+                                <span>Cart</span>
+                                {cartItemCount > 0 && (
+                                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                        {cartItemCount}
+                                    </span>
+                                )}
+                            </div>
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('orders.index')}
